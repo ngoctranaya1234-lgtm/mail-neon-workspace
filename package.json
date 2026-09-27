@@ -1,0 +1,46 @@
+{
+  "name": "mail-neon-workspace",
+  "version": "1.0.0",
+  "description": "Self-hosted Gmail aliases, connected Outlook/Hotmail inboxes, owned-domain temporary mail and email OTP in a Windows and Android PWA.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "keywords": [
+    "email",
+    "otp",
+    "temp-mail",
+    "disposable-email",
+    "gmail-dot-trick",
+    "hotmail",
+    "pwa",
+    "android-pwa",
+    "windows-pwa",
+    "neon-ui",
+    "cyber-dark"
+  ],
+  "scripts": {
+    "setup": "node scripts/setup.mjs",
+    "icons": "node scripts/generate-icons.mjs",
+    "backup": "node scripts/backup.mjs",
+    "clean": "node scripts/clean.mjs",
+    "clean:all": "node scripts/clean.mjs --all",
+    "dev": "node --watch src/server.mjs",
+    "start": "node src/server.mjs",
+    "test": "node --test test/*.test.mjs",
+    "smoke:ui": "node scripts/smoke-ui.mjs",
+    "build": "node --check src/server.mjs && node --check public/app.js && node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "html-to-text": "^9.0.5",
+    "imapflow": "^1.1.1",
+    "mailparser": "^3.7.4",
+    "postal-mime": "^3.0.1",
+    "smtp-server": "3.19.13"
+  },
+  "packageManager": "pnpm@11.19.0",
+  "devDependencies": {
+    "playwright": "^1.63.0"
+  }
+}

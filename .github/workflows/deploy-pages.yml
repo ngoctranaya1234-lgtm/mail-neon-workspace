@@ -1,0 +1,17 @@
+name: Explain hosting requirements
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  explain:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Explain why static Pages cannot run this app
+        run: |
+          echo "Mail Neon requires its Node.js server for SQLite, OAuth callbacks, and inbound email."
+          echo "Deploy the complete app behind HTTPS; publishing public/ alone would leave nonfunctional buttons."
+
