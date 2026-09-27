@@ -6,11 +6,13 @@ import { decrypt, encrypt } from './crypto.mjs';
 
 export function openDatabase(path) {
   if (process.platform !== 'win32') process.umask(0o077);
-  const directory = dirname(path);
-  mkdirSync(directory, { recursive: true, mode: 0o700 });
-  if (process.platform !== 'win32') {
-    if (statSync(directory).mode & 0o077) throw new Error('DATA_DIR must be accessible only to its owner (chmod 700)');
-    if (existsSync(path) && (statSync(path).mode & 0o077)) throw new Error('Database file must be accessible only to its owner (chmod 600)');
+  if (path !== ':memory:') {
+    const directory = dirname(path);
+    mkdirSync(directory, { recursive: true, mode: 0o700 });
+    if (process.platform !== 'win32') {
+      if (statSync(directory).mode & 0o077) throw new Error('DATA_DIR must be accessible only to its owner (chmod 700)');
+      if (existsSync(path) && (statSync(path).mode & 0o077)) throw new Error('Database file must be accessible only to its owner (chmod 600)');
+    }
   }
   const db = new DatabaseSync(path);
   db.exec('PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000; PRAGMA secure_delete=ON;');
