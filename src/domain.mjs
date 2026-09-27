@@ -1,4 +1,22 @@
-import { randomBytes, randomInt } from 'node:crypto';
+// Web Crypto is available in Node.js 24+ and secure browser contexts, so the
+// alias rules can be shared by the server and the GitHub Pages generator.
+function randomInt(minOrMax, maybeMax) {
+  const min = maybeMax === undefined ? 0 : minOrMax;
+  const max = maybeMax === undefined ? minOrMax : maybeMax;
+  const range = max - min;
+  if (!Number.isSafeInteger(min) || !Number.isSafeInteger(max) || range < 1 || range > 0x100000000) {
+    throw new RangeError('Invalid random range');
+  }
+  const limit = Math.floor(0x100000000 / range) * range;
+  const sample = new Uint32Array(1);
+  do { globalThis.crypto.getRandomValues(sample); } while (sample[0] >= limit);
+  return min + (sample[0] % range);
+}
+
+function randomHex(size) {
+  const bytes = globalThis.crypto.getRandomValues(new Uint8Array(size));
+  return Array.from(bytes, byte => byte.toString(16).padStart(2, '0')).join('');
+}
 
 export class InputError extends Error {
   constructor(message) { super(message); this.name = 'InputError'; }
@@ -166,7 +184,7 @@ export function generatePlusVariants(email, { preset = 'numbers', customTag = ''
     let tag;
     if (preset === 'numbers') tag = prefix ? `${prefix}${index + 1n}` : String(index + 1n).padStart(3,'0');
     else if (preset === 'date') tag = `${prefix ? `${prefix}_` : ''}${today}_${index + 1n}`;
-    else if (preset === 'random_hash') tag = `${prefix ? `${prefix}_` : ''}r${index.toString(36)}_${randomBytes(5).toString('hex')}`;
+    else if (preset === 'random_hash') tag = `${prefix ? `${prefix}_` : ''}r${index.toString(36)}_${randomHex(5)}`;
     else {
       const words = preset === 'social' ? social : services;
       const word = words[Number(index % BigInt(words.length))];

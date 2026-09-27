@@ -1,17 +1,55 @@
-name: Explain hosting requirements
+name: Publish GitHub Pages generator
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - pages/**
+      - src/domain.mjs
+      - public/icon.svg
+      - public/icon-192.png
+      - public/icon-512.png
+      - scripts/build-pages.mjs
+      - package.json
+      - pnpm-lock.yaml
+      - .github/workflows/deploy-pages.yml
   workflow_dispatch:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
 
 jobs:
-  explain:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Explain why static Pages cannot run this app
-        run: |
-          echo "Mail Neon requires its Node.js server for SQLite, OAuth callbacks, and inbound email."
-          echo "Deploy the complete app behind HTTPS; publishing public/ alone would leave nonfunctional buttons."
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - run: pnpm build:pages
+      - run: node --check dist/pages/domain.mjs && node --check dist/pages/app.js
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: dist/pages
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
 

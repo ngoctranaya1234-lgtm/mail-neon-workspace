@@ -20,7 +20,11 @@ Chế độ Windows tự đăng nhập chỉ dùng cho máy cục bộ. Vào **C
 
 Android mở **cùng máy chủ Node.js** qua một domain HTTPS tin cậy. Cấu hình `PUBLIC_BASE_URL=https://ten-mien-cua-ban`, đặt `AUTO_BOOTSTRAP_LOCAL=false`, chạy `pnpm start` và triển khai reverse proxy HTTPS tới Node trên `127.0.0.1:3000`. Đăng nhập bằng email/mật khẩu đã đặt trong Cài đặt trên Windows. Trong Chrome Android, chọn **Thêm vào màn hình chính** để dùng giao diện như app.
 
-GitHub Pages chỉ lưu trang tĩnh, không chạy được SQLite, OAuth callback hay webhook của dự án này. Không triển khai riêng thư mục `public/` rồi coi đó là ứng dụng hoạt động.
+## Dùng bộ sinh bí danh trên điện thoại qua GitHub Pages
+
+Mở [Mail Neon trên GitHub Pages](https://ngoctranaya1234-lgtm.github.io/mail-neon-workspace/) bằng Chrome Android hoặc trình duyệt trên máy tính. Trang này sinh Gmail Dot Trick và thẻ Plus, sao chép, tải TXT và có thể thêm vào màn hình chính. Thuật toán chạy trong trình duyệt; địa chỉ Gmail nhập vào không được gửi tới máy chủ. Tệp nguồn nằm trong `pages/`, được đóng gói bằng `pnpm build:pages` và xuất bản bằng GitHub Actions.
+
+GitHub Pages chỉ lưu trang tĩnh, không chạy được SQLite, OAuth callback hoặc webhook. Vì vậy bản Pages **không đọc thư, nhận OTP, kết nối Hotmail hay tạo mail tạm nhận thư**. Những chức năng này thuộc ứng dụng Node.js đầy đủ ở trên, cần máy chủ HTTPS công khai và các tài khoản nhà cung cấp đã cấu hình. Không triển khai riêng thư mục `public/` rồi coi đó là ứng dụng đầy đủ.
 
 ## Kết nối Gmail và Hotmail
 

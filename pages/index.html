@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#06111b">
+  <meta name="description" content="Sinh biến thể Gmail Dot Trick và Plus an toàn ngay trên điện thoại. Không cần gửi địa chỉ của bạn lên máy chủ.">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="./style.css">
+  <title>Mail Neon · Bộ sinh bí danh Gmail</title>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Mail Neon, về đầu trang"><img src="./icon.svg" alt="" width="36" height="36"><span><strong>MAIL NEON</strong><small>GMAIL ALIAS STUDIO</small></span></a>
+      <a class="source-link" href="https://github.com/ngoctranaya1234-lgtm/mail-neon-workspace" target="_blank" rel="noopener noreferrer">Mã nguồn ↗</a>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <p class="eyebrow">CÔNG CỤ TRỰC TUYẾN · CHẠY TRÊN ĐIỆN THOẠI</p>
+        <h1 id="page-title">Một hộp thư.<br><span>Nhiều cách viết.</span></h1>
+        <p>Biến thể Gmail Dot Trick và thẻ Plus được tạo ngay trong trình duyệt. Địa chỉ bạn nhập không được gửi tới máy chủ.</p>
+      </section>
+
+      <div class="notice" role="note"><span aria-hidden="true">ⓘ</span><div><strong>Giới hạn của bản GitHub Pages</strong><p>Trang này sinh, sao chép và tải danh sách bí danh. Các bí danh đều về cùng một hộp Gmail; để đọc thư hoặc mã OTP, hãy dùng <a href="https://github.com/ngoctranaya1234-lgtm/mail-neon-workspace#chạy-trên-windows">ứng dụng đầy đủ</a> và kết nối tài khoản Gmail của bạn.</p></div></div>
+
+      <div class="workspace">
+        <section class="panel controls" aria-labelledby="tool-title">
+          <div class="panel-heading"><span class="step">01 / TẠO</span><h2 id="tool-title">Cấu hình bí danh</h2></div>
+          <div class="tablist" role="tablist" aria-label="Kiểu bí danh Gmail">
+            <button id="tab-dots" type="button" role="tab" aria-controls="dots-fields" aria-selected="true">Dot Trick <span aria-hidden="true">·</span></button>
+            <button id="tab-plus" type="button" role="tab" aria-controls="plus-fields" aria-selected="false" tabindex="-1">Thẻ Plus <span aria-hidden="true">+</span></button>
+          </div>
+          <form id="generator-form" novalidate>
+            <label for="email">Địa chỉ Gmail gốc</label>
+            <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="tenban@gmail.com" required>
+            <p class="hint">Chỉ dùng Gmail cá nhân mà bạn sở hữu.</p>
+
+            <div id="dots-fields" role="tabpanel" aria-labelledby="tab-dots">
+              <label for="dot-count">Số lượng biến thể</label>
+              <input id="dot-count" name="dot-count" type="number" min="1" max="2000" value="50" inputmode="numeric">
+              <label class="check"><input id="dot-all" type="checkbox"> Lấy tất cả tổ hợp khả dụng, tối đa 2.000 mỗi lượt</label>
+              <label for="dot-mode">Kiểu sắp xếp dấu chấm</label>
+              <select id="dot-mode"><option value="combined">Tất cả · trộn và ghi loại</option><option value="categorized">Phân loại · chọn một mẫu</option></select>
+              <div id="pattern-wrap" hidden><label for="dot-pattern">Mẫu biến thể</label><select id="dot-pattern"><option value="random">Xáo trộn ngẫu nhiên</option><option value="binary">Thứ tự nhị phân</option><option value="one_dot">1 dấu chấm</option><option value="two_dots">2 dấu chấm</option><option value="alternating">Xen kẽ đều</option></select></div>
+              <label class="check"><input id="googlemail" type="checkbox"> Dùng đuôi @googlemail.com</label>
+              <p class="hint">Số biến thể Dot Trick là hữu hạn: tối đa 2<sup>n−1</sup>−1 với tên Gmail dài n ký tự.</p>
+            </div>
+
+            <div id="plus-fields" role="tabpanel" aria-labelledby="tab-plus" hidden>
+              <label for="plus-count">Số lượng muốn sinh</label>
+              <input id="plus-count" name="plus-count" type="text" inputmode="numeric" pattern="[1-9][0-9]*" value="50" aria-describedby="plus-count-hint">
+              <p class="hint" id="plus-count-hint">Không có giới hạn 100; xử lý theo từng lô. Bạn có thể dừng trong khi đang sinh.</p>
+              <label for="plus-preset">Gói thẻ</label>
+              <select id="plus-preset"><option value="social">Mạng xã hội</option><option value="services">Dịch vụ</option><option value="numbers">Số thứ tự</option><option value="random_hash">Mã ngẫu nhiên</option><option value="date">Ngày + số thứ tự</option></select>
+              <label for="plus-prefix">Từ khóa thêm vào (không bắt buộc)</label>
+              <input id="plus-prefix" type="text" autocomplete="off" placeholder="congviec">
+            </div>
+
+            <div class="actions"><button id="generate" class="primary" type="submit">Bắt đầu sinh <span aria-hidden="true">→</span></button><button id="stop" class="secondary" type="button" hidden>Dừng</button></div>
+            <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+          </form>
+        </section>
+
+        <section class="panel results" aria-labelledby="result-title">
+          <div class="panel-heading"><span class="step">02 / KẾT QUẢ</span><h2 id="result-title">Danh sách bí danh <span id="result-count" class="count">0</span></h2></div>
+          <div class="result-actions"><button id="copy-all" type="button" disabled>Sao chép tất cả</button><button id="download" type="button" disabled>Tải .TXT</button></div>
+          <div id="empty" class="empty"><span class="empty-icon" aria-hidden="true">✦</span><strong>Chưa có biến thể</strong><p>Nhập Gmail của bạn, chọn cách sinh rồi nhấn “Bắt đầu sinh”.</p></div>
+          <div id="result-list" class="result-list" role="list" hidden></div>
+          <nav id="pager" class="pager" aria-label="Trang kết quả" hidden><button id="previous" type="button">← Trước</button><span id="page-label"></span><button id="next" type="button">Tiếp →</button></nav>
+        </section>
+      </div>
+    </main>
+    <footer><span>MAIL NEON / TRÌNH TẠO BÍ DANH GMAIL</span><span>Chạy trực tiếp trong trình duyệt · <a href="https://github.com/ngoctranaya1234-lgtm/mail-neon-workspace">Ứng dụng đầy đủ trên GitHub</a></span></footer>
+  </div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

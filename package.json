@@ -30,6 +30,8 @@
     "start": "node src/server.mjs",
     "test": "node --test test/*.test.mjs",
     "smoke:ui": "node scripts/smoke-ui.mjs",
+    "smoke:pages": "node scripts/build-pages.mjs && node scripts/smoke-pages.mjs",
+    "build:pages": "node scripts/build-pages.mjs",
     "build": "node --check src/server.mjs && node --check public/app.js && node --test test/*.test.mjs"
   },
   "dependencies": {
