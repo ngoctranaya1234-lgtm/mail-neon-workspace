@@ -18,12 +18,13 @@ const server = createServer((req, res) => {
 });
 let browser;
 try {
-  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  const liveUrl = process.env.PAGES_URL;
+  if (!liveUrl) await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   browser = await chromium.launch({ headless: true, executablePath: process.env.CHROME_PATH || 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe' });
   const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
-  const origin = `http://127.0.0.1:${server.address().port}`;
+  const origin = liveUrl || `http://127.0.0.1:${server.address().port}`;
   await page.goto(origin);
   await page.getByLabel('Địa chỉ Gmail gốc').fill('nganhut3@gmail.com');
   await page.getByRole('button', { name: /Bắt đầu sinh/ }).click();
@@ -50,5 +51,5 @@ try {
   console.log('GitHub Pages UI smoke passed: mobile layout, Dot categories, unique aliases, Plus 2501 and result paging.');
 } finally {
   if (browser) await browser.close();
-  await new Promise(resolve => server.close(resolve));
+  if (server.listening) await new Promise(resolve => server.close(resolve));
 }
