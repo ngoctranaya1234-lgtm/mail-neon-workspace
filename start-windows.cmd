@@ -63,7 +63,7 @@ if not exist "cert.pfx" (
   if errorlevel 1 exit /b 1
 )
 
-echo [4/4] Dang mo ung dung tren Google Chrome...
+echo [4/4] Dang kiem tra may chu va mo ung dung...
 
 echo.
 echo ================================================================
@@ -71,8 +71,6 @@ echo   MAY CHU HTTPS SAN SANG TAI: https://127.0.0.1:3000
 echo   SETUP_TOKEN nam trong tep .env; giu kin tep nay.
 echo ================================================================
 echo.
-echo Dang khoi chay cua so Google Chrome (App Mode)...
-
 rem Tim kiem Google Chrome tren may tinh (loai bo hoan toan Edge)
 set "CHROME_EXE="
 if exist "C:\Program Files\Google\Chrome\Application\chrome.exe" set "CHROME_EXE=C:\Program Files\Google\Chrome\Application\chrome.exe"
@@ -80,21 +78,18 @@ if exist "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" set "CHRO
 if exist "%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe" set "CHROME_EXE=%LOCALAPPDATA%\Google\Chrome\Application\chrome.exe"
 if not defined CHROME_EXE for /f "delims=" %%I in ('where chrome 2^>nul') do if not defined CHROME_EXE set "CHROME_EXE=%%I"
 
-if defined CHROME_EXE (
-  start "" "%CHROME_EXE%" --user-data-dir="%LOCALAPPDATA%\MailNeonWorkspace\ChromeProfile" --app=https://127.0.0.1:3000 --allow-insecure-localhost --window-size=1280,820
-) else (
-  echo [!] Khong tim thay duong dan Google Chrome tieu chuan, mo qua trinh duyet mac dinh...
-  start "" "https://127.0.0.1:3000"
-)
-
-rem Khoi dong server HTTPS va SMTP ngam
+rem Neu may chu dang chay, mo ung dung ngay. Neu chua, doi may chu san sang.
 "%NODE_EXE%" -e "const h=require('https');const r=h.get('https://127.0.0.1:3000/healthz',{rejectUnauthorized:false,timeout:1200},s=>process.exit(s.statusCode===200?0:1));r.on('error',()=>process.exit(1));r.on('timeout',()=>{r.destroy();process.exit(1)})"
-if not errorlevel 1 (
-  echo [INFO] May chu da chay san tren cong 3000; su dung cua so Chrome vua mo.
-  exit /b 0
-)
+if not errorlevel 1 goto already_running
 set "AUTO_BOOTSTRAP_LOCAL=true"
+start "" /B "%NODE_EXE%" "scripts\open-when-ready.mjs" "%CHROME_EXE%"
 "%NODE_EXE%" "src\server.mjs"
 
 pause
+exit /b 1
+
+:already_running
+"%NODE_EXE%" "scripts\open-when-ready.mjs" "%CHROME_EXE%"
+echo [INFO] May chu da chay san tren cong 3000.
+exit /b 0
 
